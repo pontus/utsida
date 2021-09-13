@@ -10,7 +10,7 @@
 no-ping
 {% endif %}
 
-dhcp-option=tag:{{ bridge_name }},6,{{ bridge_ip |ipaddr('address') }},{{ dns_servers | join(',') }}
+dhcp-option=tag:{{ bridge_name }},6,{{ dns_servers | join(',') }}
 dhcp-option=tag:{{ bridge_name }},3,{{ bridge_ip |ipaddr('address') }}
 
 {% if domain_search_name is defined and domain_search_name %}
@@ -22,7 +22,7 @@ dhcp-option=15,{{ domain_search_name }}
 dhcp-range=set:external,{{ range }},{{ dhcp_lease_time }}
 {%   endfor %}
 dhcp-option=tag:external,3,{{ external_static_ip |ipaddr('address') }}
-dhcp-option=tag:external,6,{{ external_static_ip |ipaddr('address') }},{{ dns_servers | join(',') }}
+dhcp-option=tag:external,6,{{ dns_servers | join(',') }}
 
 {%   if external_vlan is defined and external_vlan|int != 0 %}
 interface={{ external_if }}.{{ external_vlan }}
