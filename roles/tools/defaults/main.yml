@@ -5,6 +5,7 @@ apt_pkg_list:
   - bash-completion
   - mosh
   - net-tools
+  - bat
   - rsync
   - tmux
   - emacs-nox
@@ -17,7 +18,6 @@ apt_pkg_list:
 
 snap_pkg_list:
   - nmap
-  - batcat
   - docker
 
 apt_not_installed_list:

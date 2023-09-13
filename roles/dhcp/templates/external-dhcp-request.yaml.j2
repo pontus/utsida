@@ -8,11 +8,22 @@ network:
         "{{ external_if }}":
             # Handle buggy sriov support
             virtual-function-count: 0
-{%   if external_vlan is not defined or external_vlan|int == 0 %}
+{%   if not ext_bridge_name and (external_vlan is not defined or external_vlan|int == 0) %}
             dhcp4: yes
             dhcp6: yes
+{% elif ext_bridge_name %}
+            dhcp4: no
+            dhcp6: no
 {%   endif %}      
 {% endif %}      
+{% if ext_bridge_name %}
+    bridges:
+        {{ ext_bridge_name }}:
+            dhcp4: yes
+            dhcp6: yes
+            interfaces:
+              - {{ external_if }}
+{% endif %}
 {% if external_vlan is defined and external_vlan|int != 0 %}
     vlans:
         "{{ external_if }}.{{ external_vlan }}":

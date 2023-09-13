@@ -4,6 +4,7 @@
   ansible.builtin.systemd:
     state: restarted
     name: dnsmasq.service
+    daemon_reload: yes
   ignore_errors: true
 
 - name: Apply netplan configuration

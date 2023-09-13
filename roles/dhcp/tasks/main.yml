@@ -7,6 +7,11 @@
     state: present
     update_cache: true
 
+- name: Ensure existence of dnsmasq systemd override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/dnsmasq.service.d
+    state: directory
+
 - name: Install dnsmasq systemd override
   ansible.builtin.copy:
     dest: /etc/systemd/system/dnsmasq.service.d/override.conf

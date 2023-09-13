@@ -8,7 +8,7 @@ network:
         "{{ external_if }}":
             # Handle buggy sriov support
             virtual-function-count: 0
-{%   if external_vlan is not defined or external_vlan|int == 0 %}
+{%   if not ext_bridge_name and (external_vlan is not defined or external_vlan|int == 0) %}
             addresses:
             - {{ external_static_ip }}
 {%   endif %}      
@@ -21,3 +21,10 @@ network:
             addresses:
             - {{ external_static_ip }}
 {% endif %}
+{% if ext_bridge_name  %}
+    bridges:
+        {{ ext_bridge_name }}:
+            addresses:
+                - {{ external_static_ip }}
+{% endif %}
+

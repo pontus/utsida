@@ -22,6 +22,9 @@
   loop: "{{ allowed_apps }}"
 
 - name: Enable filtering
-  ansible.builtin.command:
-    cmd: ufw enable
-    stdin: yes
+  ansible.builtin.lineinfile:
+    path: /etc/ufw/ufw.conf
+    regexp: "^ENABLED=.*"
+    line: ENABLED=yes
+  notify:
+    - Reload ufw

@@ -12,4 +12,11 @@
 -A POSTROUTING -o {{ external_if }} -j MASQUERADE
 {%   endif %}
 {% endif %}
+{% if ext_bridge_name %}
+{%   if external_static_ip %}
+-A POSTROUTING -o {{ ext_bridge_name }} ! -d {{ external_static_ip | ipaddr('network/prefix') }} -j MASQUERADE
+{%   else %}
+-A POSTROUTING -o {{ ext_bridge_name }} -j MASQUERADE
+{%   endif %}
+{% endif %}
 COMMIT

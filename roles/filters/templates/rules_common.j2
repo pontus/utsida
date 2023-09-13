@@ -1,5 +1,8 @@
 *mangle
 -I POSTROUTING -p tcp --tcp-flags SYN,RST SYN -o {{ external_if }} -j TCPMSS --clamp-mss-to-pmtu
+{% if ext_bridge_name %}
+-I POSTROUTING -p tcp --tcp-flags SYN,RST SYN -o {{ ext_bridge_name }} -j TCPMSS --clamp-mss-to-pmtu
+{% endif %}
 COMMIT
 #
 *filter
@@ -12,6 +15,13 @@ COMMIT
 {%   endif %}
 {% endfor %}
 -I FORWARD -i {{ bridge_name }} -j ACCEPT
+{% if ext_bridge_name %}
+-I FORWARD -i {{ ext_bridge_name }} -j ACCEPT
+{%   if external_static_ip %}
+-I FORWARD -o {{ ext_bridge_name }} -s {{ external_static_ip | ipaddr('network/prefix') }} -j ACCEPT
+-I FORWARD -i {{ ext_bridge_name }} -d {{ external_static_ip | ipaddr('network/prefix') }} -j ACCEPT
+{%   endif %}
+{% endif %}
 {% if external_serve_dhcp is defined and (external_serve_dhcp==True or external_serve_dhcp|lower in ('yes', 'true')) %}
 {%   if external_vlan is defined and external_vlan|int != 0 %}
 -A ufw-before-input -p udp -m udp --dport 67 -i {{ external_if }}.{{ external_vlan }} -j ACCEPT
@@ -23,4 +33,11 @@ COMMIT
 {% endif %}
 -A ufw-before-input -p udp -m udp --dport 67 -i {{ bridge_name }} -j ACCEPT
 -A ufw-before-output -p udp -m udp --dport 68 -o {{ bridge_name }} -j ACCEPT
+{% if ext_bridge_name %}
+-A ufw-before-input -p udp -m udp --dport 67 -i {{ ext_bridge_name }} -j ACCEPT
+-A ufw-before-output -p udp -m udp --dport 68 -o {{ ext_bridge_name }} -j ACCEPT
+{% endif %}
+-A ufw-before-input -i docker0 -j ACCEPT
+-I INPUT -i vm-bridge -p tcp --dport 8000 -j ACCEPT
+-I INPUT -i vm-bridge -p tcp --dport 8081 -j ACCEPT
 COMMIT
