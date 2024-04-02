@@ -20,8 +20,9 @@ log-queries
 dhcp-mac=set:liten-mtu,14:d4:24:0b:1e:69
 dhcp-mac=set:liten-mtu,80:a5:89:53:38:f3
 
-dhcp-option=tag:{{ bridge_name }},6,{{ dns_servers | join(',') }}
-dhcp-option=tag:{{ bridge_name }},3,{{ bridge_ip |ipaddr('address') }}
+dhcp-option=tag:{{ bridge_name }},6,{{ bridge_ip |ansible.utils.ipaddr('address') }}
+# ,{{ dns_servers | join(',') }}
+dhcp-option=tag:{{ bridge_name }},3,{{ bridge_ip |ansible.utils.ipaddr('address') }}
 dhcp-option=tag:liten-mtu,26,1400
 
 {% if domain_search_name is defined and domain_search_name %}
@@ -32,8 +33,10 @@ dhcp-option=119,{{ domain_search_name }}
 {%   for range in external_serve_dhcp_ranges %}
 dhcp-range=set:external,{{ range }},{{ dhcp_lease_time }}
 {%   endfor %}
-dhcp-option=tag:external,3,{{ external_static_ip |ipaddr('address') }}
+dhcp-option=tag:external,3,{{ external_static_ip |ansible.utils.ipaddr('address') }}
 dhcp-option=tag:external,6,{{ dns_servers | join(',') }}
+
+resolv-file=/etc/additional-resolv.conf
 
 {% if ext_bridge_name %}
 interface={{ ext_bridge_name }}
@@ -47,8 +50,8 @@ interface={{ external_if }}
 {% endif %}
 interface={{ bridge_name }}
 
-dhcp-range=set:{{ bridge_name }},{{ (bridge_ip|ipaddr('network')|ipaddr('int')+dhcp_edge_reserve)|ipaddr('address') 
-    }},{{ (bridge_ip|ipaddr('broadcast')|ipaddr('int')-dhcp_edge_reserve)|ipaddr('address') }},{{ dhcp_lease_time }}
+dhcp-range=set:{{ bridge_name }},{{ (bridge_ip|ansible.utils.ipaddr('network')|ansible.utils.ipaddr('int')+dhcp_edge_reserve)|ansible.utils.ipaddr('address') 
+    }},{{ (bridge_ip|ansible.utils.ipaddr('broadcast')|ansible.utils.ipaddr('int')-dhcp_edge_reserve)|ansible.utils.ipaddr('address') }},{{ dhcp_lease_time }}
 {% for range in extra_dhcp_ranges %}
 dhcp-range=set:{{ bridge_name }},{{ range }},{{ dhcp_lease_time }}
 {% endfor %}
