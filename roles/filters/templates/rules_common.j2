@@ -3,6 +3,8 @@
 {% if ext_bridge_name %}
 -I POSTROUTING -p tcp --tcp-flags SYN,RST SYN -o {{ ext_bridge_name }} -j TCPMSS --clamp-mss-to-pmtu
 {% endif %}
+# VPN
+-I POSTROUTING -p tcp --tcp-flags SYN,RST SYN -o tun0 -j TCPMSS --clamp-mss-to-pmtu
 COMMIT
 #
 *filter
@@ -18,8 +20,8 @@ COMMIT
 {% if ext_bridge_name %}
 -I FORWARD -i {{ ext_bridge_name }} -j ACCEPT
 {%   if external_static_ip %}
--I FORWARD -o {{ ext_bridge_name }} -s {{ external_static_ip | ipaddr('network/prefix') }} -j ACCEPT
--I FORWARD -i {{ ext_bridge_name }} -d {{ external_static_ip | ipaddr('network/prefix') }} -j ACCEPT
+-I FORWARD -o {{ ext_bridge_name }} -s {{ external_static_ip | ansible.utils.ipaddr('network/prefix') }} -j ACCEPT
+-I FORWARD -i {{ ext_bridge_name }} -d {{ external_static_ip | ansible.utils.ipaddr('network/prefix') }} -j ACCEPT
 {%   endif %}
 {% endif %}
 {% if external_serve_dhcp is defined and (external_serve_dhcp==True or external_serve_dhcp|lower in ('yes', 'true')) %}
@@ -33,6 +35,9 @@ COMMIT
 {% endif %}
 -A ufw-before-input -p udp -m udp --dport 67 -i {{ bridge_name }} -j ACCEPT
 -A ufw-before-output -p udp -m udp --dport 68 -o {{ bridge_name }} -j ACCEPT
+-A ufw-before-input -p udp -m udp --dport 53 -i {{ bridge_name }} -j ACCEPT
+-A ufw-before-output -p udp -m udp --dport 53 -o {{ bridge_name }} -j ACCEPT
+-A ufw-before-input -p tcp --dport 53 -i {{ bridge_name }} -j ACCEPT
 {% if ext_bridge_name %}
 -A ufw-before-input -p udp -m udp --dport 67 -i {{ ext_bridge_name }} -j ACCEPT
 -A ufw-before-output -p udp -m udp --dport 68 -o {{ ext_bridge_name }} -j ACCEPT

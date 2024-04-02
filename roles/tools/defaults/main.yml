@@ -15,6 +15,7 @@ apt_pkg_list:
   - curl
   - unattended-upgrades
   - snapd
+  - unzip
 
 snap_pkg_list:
   - nmap

@@ -1,22 +1,26 @@
 *nat
 {% if external_vlan is defined and external_vlan|int != 0 %}
+# VLAN
 {%   if external_static_ip is defined and external_static_ip %}
--A POSTROUTING -o {{ external_if }}.{{ external_vlan }} ! -d {{ external_static_ip | ipaddr('network/prefix') }} -j MASQUERADE
+-A POSTROUTING -o {{ external_if }}.{{ external_vlan }} ! -d {{ external_static_ip | ansible.utils.ipaddr('network/prefix') }} -j MASQUERADE
 {%   else %}
 -A POSTROUTING -o {{ external_if }}.{{ external_vlan }} -j MASQUERADE
 {%   endif %}
 {% else %}
+# No VLAN
 {%   if external_static_ip is defined and external_static_ip %}
--A POSTROUTING -o {{ external_if }} ! -d {{ external_static_ip | ipaddr('network/prefix') }} -j MASQUERADE
+-A POSTROUTING -o {{ external_if }} ! -d {{ external_static_ip | ansible.utils.ipaddr('network/prefix') }} -j MASQUERADE
 {%   else %}
 -A POSTROUTING -o {{ external_if }} -j MASQUERADE
 {%   endif %}
 {% endif %}
 {% if ext_bridge_name %}
 {%   if external_static_ip %}
--A POSTROUTING -o {{ ext_bridge_name }} ! -d {{ external_static_ip | ipaddr('network/prefix') }} -j MASQUERADE
+-A POSTROUTING -o {{ ext_bridge_name }} ! -d {{ external_static_ip | ansible.utils.ipaddr('network/prefix') }} -j MASQUERADE
 {%   else %}
 -A POSTROUTING -o {{ ext_bridge_name }} -j MASQUERADE
 {%   endif %}
 {% endif %}
+# If VPN, masquerade there
+-A POSTROUTING -o tun0 -j MASQUERADE
 COMMIT
