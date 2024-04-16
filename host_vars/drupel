@@ -8,10 +8,10 @@ dns_servers:
 domain_search_name: freyhult.net
 external_if: eth0
 external_request_dhcp: true
-external_static_ip: 172.16.15.3/24 
+#external_static_ip: 172.16.15.3/24
 external_vlan: None
-external_serve_dhcp_ranges:
-  - 172.16.15.30,172.16.15.100
+#external_serve_dhcp_ranges:
+#  - 172.16.15.30,172.16.15.100
 extra_dhcp_ranges:
   - 2001:470:27:3de::0,2001:470:27:3de:ffff::0
 dhcp_edge_reserve: 20
@@ -20,6 +20,7 @@ bridge_name: br-insida
 ext_bridge_name: br-utsida
 nat: yes
 bridge_ip: 192.168.25.2/24
+bridge_ipv6: fe80::10:10/64
 internal:
   first:
     interface: eth0
@@ -27,6 +28,14 @@ internal:
   second:
     interface: eth0
     vlan: 21
+additional:
+  wlannet:
+    interface: eth0
+    vlan: 95
+    local_ip: 172.16.15.4/24
+    serve_dhcp: true
+    bridge: true
+    bridgename: br-wlannet
 tunnels:
   - name: sit_hetunnel
     enabled: true

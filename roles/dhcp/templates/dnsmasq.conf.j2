@@ -20,6 +20,8 @@ log-queries
 dhcp-mac=set:liten-mtu,14:d4:24:0b:1e:69
 dhcp-mac=set:liten-mtu,80:a5:89:53:38:f3
 
+dhcp-broadcast
+
 dhcp-option=tag:{{ bridge_name }},6,{{ bridge_ip |ansible.utils.ipaddr('address') }}
 # ,{{ dns_servers | join(',') }}
 dhcp-option=tag:{{ bridge_name }},3,{{ bridge_ip |ansible.utils.ipaddr('address') }}
@@ -54,4 +56,16 @@ dhcp-range=set:{{ bridge_name }},{{ (bridge_ip|ansible.utils.ipaddr('network')|a
     }},{{ (bridge_ip|ansible.utils.ipaddr('broadcast')|ansible.utils.ipaddr('int')-dhcp_edge_reserve)|ansible.utils.ipaddr('address') }},{{ dhcp_lease_time }}
 {% for range in extra_dhcp_ranges %}
 dhcp-range=set:{{ bridge_name }},{{ range }},{{ dhcp_lease_time }}
+{% endfor %}
+
+{% for item in additional %}
+{%   if 'serve_dhcp' in additional[item] and 'local_ip' in additional[item] and additional[item]['serve_dhcp'] %}
+{%     if 'bridge' in additional[item] and additional[item]['bridge'] %}
+interface = {{ additional[item]['bridgename'] }}
+{%     else %}
+interface = {{ item }}
+{%     endif %}
+dhcp-range=set:{{ item }},{{ (additional[item]['local_ip']|ansible.utils.ipaddr('network')|ansible.utils.ipaddr('int')+dhcp_edge_reserve)|ansible.utils.ipaddr('address') 
+    }},{{ (additional[item]['local_ip']|ansible.utils.ipaddr('broadcast')|ansible.utils.ipaddr('int')-dhcp_edge_reserve)|ansible.utils.ipaddr('address') }},{{ dhcp_lease_time }}
+{%   endif %}
 {% endfor %}
