@@ -28,6 +28,7 @@
   ansible.builtin.template:
     src: external-dhcp-request.yaml.j2
     dest: /etc/netplan/70-utsida-external-dhcp-request.yaml
+    mode: "0700"
   notify:
     - Apply netplan configuration
 
@@ -35,5 +36,6 @@
   ansible.builtin.template:
     src: external-dhcp-serve.yaml.j2
     dest: /etc/netplan/80-utsida-external-dhcp-serve.yaml
+    mode: "0700"
   notify:
     - Apply netplan configuration

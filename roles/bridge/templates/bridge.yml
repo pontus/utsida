@@ -21,6 +21,9 @@ network:
       dhcp4: "no"
       addresses:
         - "{{ bridge_ip }}"
+{% if bridge_ipv6 is defined %}
+        - "{{ bridge_ipv6 }}"
+{% endif %}
       interfaces:
 {% for item in internal %}
 {%   if 'interface' in internal[item]  %}

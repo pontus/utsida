@@ -8,23 +8,27 @@ network:
         "{{ external_if }}":
             # Handle buggy sriov support
             virtual-function-count: 0
-{%   if not ext_bridge_name and (external_vlan is not defined or external_vlan|int == 0) %}
+{%   if not ext_bridge_name and (external_vlan is not defined or external_vlan|int == 0) 
+    and external_static_ip is defined and external_static_ip %}
             addresses:
             - {{ external_static_ip }}
 {%   endif %}      
-{% endif %}      
-{% if external_vlan is defined and external_vlan|int != 0 %}
+{%   if external_vlan is defined and external_vlan|int != 0 %}
     vlans:
         "{{ external_if }}.{{ external_vlan }}":
             id: "{{ external_vlan }}"
             link: "{{ external_if }}"
+{%     if external_static_ip is defined and external_static_ip %}
             addresses:
             - {{ external_static_ip }}
-{% endif %}
-{% if ext_bridge_name  %}
+{%     endif %}
+{%   endif %}
+{%   if ext_bridge_name  %}
     bridges:
         {{ ext_bridge_name }}:
+{%     if external_static_ip is defined and external_static_ip %}
             addresses:
                 - {{ external_static_ip }}
+{%     endif %}
+{%   endif %}
 {% endif %}
-

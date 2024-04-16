@@ -3,5 +3,30 @@
   ansible.builtin.template:
     src: bridge.yml
     dest: /etc/netplan/90-utsida-{{ bridge_name }}.yaml
-  #notify:
-  #  - Apply netplan configuration
+    mode: '0700'
+  notify:
+    - Apply netplan configuration
+
+- name: Fix additional interfaces
+  ansible.builtin.template:
+    src: additional.yml
+    dest: /etc/netplan/90-additional.yaml
+    mode: '0700'
+  notify:
+    - Apply netplan configuration
+
+- name: We need to do some systemd-networkd configuration, internal
+  ansible.builtin.template:
+    src: override-internal.conf
+    dest: /etc/systemd/network/10-netplan-{{ bridge_name }}.network.d/override.conf
+    mode: '0644'
+  notify:
+    - Apply netplan configuration
+
+- name: We need to do some systemd-networkd configuration, external
+  ansible.builtin.template:
+    src: override-external.conf
+    dest: /etc/systemd/network/10-netplan-{{ ext_bridge_name }}.network.d/override.conf
+    mode: '0644'
+  notify:
+    - Apply netplan configuration

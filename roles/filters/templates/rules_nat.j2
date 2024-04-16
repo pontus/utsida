@@ -15,7 +15,7 @@
 {%   endif %}
 {% endif %}
 {% if ext_bridge_name %}
-{%   if external_static_ip %}
+{%   if external_static_ip is defined and external_static_ip %}
 -A POSTROUTING -o {{ ext_bridge_name }} ! -d {{ external_static_ip | ansible.utils.ipaddr('network/prefix') }} -j MASQUERADE
 {%   else %}
 -A POSTROUTING -o {{ ext_bridge_name }} -j MASQUERADE

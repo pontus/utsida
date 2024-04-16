@@ -28,3 +28,11 @@
     line: ENABLED=yes
   notify:
     - Reload ufw
+
+- name: Fix IPv6 rules
+  ansible.builtin.blockinfile:
+    dest: /etc/ufw/user6.rules
+    block: "{{ lookup('template', 'rules_user6.j2') }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK USER6"
+  notify:
+    - Reload ufw

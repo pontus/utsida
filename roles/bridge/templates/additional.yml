@@ -1,0 +1,40 @@
+---
+# This file comes from ansible, do not change
+
+network:
+  version: 2
+  renderer: networkd
+
+  vlans:
+{% for item in additional %}
+{%   if 'vlan' in additional[item] and additional[item]['vlan']|int != 0 and 'interface' in additional[item] %}
+    {{ item }}:
+      id: "{{ additional[item]['vlan'] }}"
+      link: "{{ additional[item]['interface'] }}"
+{%     if not 'bridge' in additional[item] or not additional[item]['bridge'] %}
+{%       if 'local_ip' in additional[item] %}
+      dhcp4: "no"
+      addresses:
+        - "{{ additional[item]['local_ip']}}"
+{%       else %}
+      dhcp4: "yes"
+{%       endif %}
+{%     endif %}
+{%   endif -%}
+{% endfor %}
+
+  bridges:
+{% for item in additional %}
+{%   if 'bridge' in additional[item] and additional[item]['bridge'] %}
+    {{ additional[item]['bridgename'] }}:
+{%     if 'local_ip' in additional[item] %}
+      dhcp4: "no"
+      addresses:
+        - "{{ additional[item]['local_ip']}}"
+{%     elif not 'bridge' in additional['item'] or not additional['item']['bridge'] %}
+      dhcp4: "yes"
+{%     endif %}
+      interfaces:
+        - "{{ item }}"
+{%   endif -%}
+{% endfor %}
