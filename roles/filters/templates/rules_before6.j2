@@ -1,0 +1,6 @@
+*filter
+
+-A ufw6-before-forward -i {{ bridge_name }} -j ACCEPT
+-A ufw6-before-forward -i {{ ext_bridge_name }} -d 0::0d:10/::ffff:ffff -j ACCEPT
+
+COMMIT
