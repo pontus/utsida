@@ -8,6 +8,7 @@ apt_pkg_list:
   - bat
   - rsync
   - tmux
+  - avahi-daemon
   - emacs-nox
   - vim
   - sysstat
