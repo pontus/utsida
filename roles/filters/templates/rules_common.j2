@@ -57,6 +57,8 @@ COMMIT
 -A ufw-before-input -p udp -m udp --dport 67 -i {{ additional[item]['bridgename'] }} -j ACCEPT
 -A ufw-before-output -p udp -m udp --dport 68 -o {{ additional[item]['bridgename'] }} -j ACCEPT
 -A ufw-before-input -p tcp --dport 8080 -i {{ additional[item]['bridgename'] }} -j ACCEPT
+-A ufw-before-input -p udp -i {{ additional[item]['bridgename'] }} -d {{ additional[item]['local_ip'] }} -j ACCEPT
+-A ufw-before-input -p tcp -i {{ additional[item]['bridgename'] }} -d {{ additional[item]['local_ip'] }} -j ACCEPT
 {%     endif %}
 {%   endif %}
 -A ufw-before-input -p tcp --dport 8080 -i {{ item }} -j ACCEPT

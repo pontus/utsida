@@ -31,8 +31,8 @@
 
 - name: Fix IPv6 rules
   ansible.builtin.blockinfile:
-    dest: /etc/ufw/user6.rules
-    block: "{{ lookup('template', 'rules_user6.j2') }}"
+    dest: /etc/ufw/before6.rules
+    block: "{{ lookup('template', 'rules_before6.j2') }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK USER6"
   notify:
     - Reload ufw
