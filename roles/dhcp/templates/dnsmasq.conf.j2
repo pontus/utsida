@@ -19,6 +19,7 @@ log-queries
 
 dhcp-mac=set:liten-mtu,14:d4:24:0b:1e:69
 dhcp-mac=set:liten-mtu,80:a5:89:53:38:f3
+resolv-file=/etc/additional-resolv.conf
 
 dhcp-broadcast
 
@@ -38,7 +39,6 @@ dhcp-range=set:external,{{ range }},{{ dhcp_lease_time }}
 dhcp-option=tag:external,3,{{ external_static_ip |ansible.utils.ipaddr('address') }}
 dhcp-option=tag:external,6,{{ dns_servers | join(',') }}
 
-resolv-file=/etc/additional-resolv.conf
 
 {% if ext_bridge_name %}
 interface={{ ext_bridge_name }}
