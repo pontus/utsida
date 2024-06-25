@@ -22,5 +22,6 @@
 {%   endif %}
 {% endif %}
 # If VPN, masquerade there
--A POSTROUTING -o tun0 -j MASQUERADE
+-A POSTROUTING -o tun+ -j MASQUERADE
+-A POSTROUTING -o av+ -j MASQUERADE
 COMMIT
