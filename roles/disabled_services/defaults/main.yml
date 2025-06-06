@@ -1,7 +1,7 @@
 ---
-
 disabled_systemd_list:
   - open-iscsi
+  - ModemManager
 
 blacklisted_modules:
   - iscsi_tcp
