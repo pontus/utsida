@@ -10,10 +10,16 @@
 no-ping
 {% endif %}
 
+{% if dns_servers is defined and dns_servers %}
+{%   for s in dns_servers %}
+server={{ s }}
+{%   endfor %}
+{% else %}
 server=8.8.8.8
 server=8.8.4.4
-
-bind-dynamic
+server=2001:4860:4860::8888
+server=2001:4860:4860::8844
+{% endif %}
 
 log-queries
 
