@@ -8,7 +8,10 @@
 COMMIT
 #
 *filter
--I FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+-I INPUT -i {{ bridge_name }} -d 224.0.0.0/4 -j ACCEPT
+
+-I FORWARD -i {{ bridge_name }} -m conntrack --ctstate NEW,ESTABLISHED,RELATED -j ACCEPT
+-I FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 {% for item in internal %}
 {%   if 'vlan' in internal[item] and internal[item]['vlan']|int != 0 and 'interface' in internal[item] %}
 -I FORWARD -i {{ internal[item]['interface'] }}.{{ internal[item]['vlan'] }} -j ACCEPT
@@ -16,7 +19,7 @@ COMMIT
 -I FORWARD -i {{ internal[item]['interface'] }} -j ACCEPT
 {%   endif %}
 {% endfor %}
--I FORWARD -i {{ bridge_name }} -j ACCEPT
+-I FORWARD -i {{ bridge_name }} -d  -j ACCEPT
 {% if ext_bridge_name %}
 -I FORWARD -i {{ ext_bridge_name }} -j ACCEPT
 {%   if external_static_ip is defined and external_static_ip %}
@@ -28,6 +31,7 @@ COMMIT
 -I FORWARD -i {{ item }} -j ACCEPT
 {%   if 'bridge' in additional[item] and additional[item]['bridge'] %}
 -I FORWARD -i {{ additional[item]['bridgename'] }} -j ACCEPT
+-I INPUT -i {{ additional[item]['bridgename'] }} -d 224.0.0.0/4 -j ACCEPT
 {%   endif %}
 {% endfor %}
 #
@@ -45,9 +49,13 @@ COMMIT
 -A ufw-before-input -p udp -m udp --dport 53 -i {{ bridge_name }} -j ACCEPT
 -A ufw-before-output -p udp -m udp --dport 53 -o {{ bridge_name }} -j ACCEPT
 -A ufw-before-input -p tcp --dport 53 -i {{ bridge_name }} -j ACCEPT
+-A ufw-before-input -p tcp --dport 443 -i {{ bridge_name }} -j ACCEPT
+-A ufw-before-input -p tcp --dport 80 -i {{ bridge_name }} -j ACCEPT
 {% if ext_bridge_name %}
 -A ufw-before-input -p udp -m udp --dport 67 -i {{ ext_bridge_name }} -j ACCEPT
 -A ufw-before-output -p udp -m udp --dport 68 -o {{ ext_bridge_name }} -j ACCEPT
+-A ufw-before-input -p tcp --dport 443 -i {{ ext_bridge_name }} -j ACCEPT
+-A ufw-before-input -p tcp --dport 80 -i {{ ext_bridge_name }} -j ACCEPT
 {% endif %}
 {% for item in additional %}
 {%   if 'serve_dhcp' in additional[item] and additional[item]['serve_dhcp'] %}
