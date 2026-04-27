@@ -3,17 +3,20 @@
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/unifi.list
     src: unifi.list
+    mode: "0644"
+    owner: root
 
 - name: Copy apt key for unifi
   ansible.builtin.copy:
     dest: /etc/unifi.key
+    mode: "0644"
+    owner: root
     src: unifi.key
   notify:
     - Trust unifi key
 
 - name: Force handlers
-  meta: flush_handlers
-
+  ansible.builtin.meta: flush_handlers
 # - name: Install controller software
 #   ansible.builtin.apt:
 #     name:

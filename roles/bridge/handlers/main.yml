@@ -1,6 +1,6 @@
 ---
-
 - name: Apply netplan configuration
   ansible.builtin.command:
     cmd: netplan apply
-  ignore_errors: true
+  changed_when: true
+  failed_when: false
