@@ -19,7 +19,7 @@ COMMIT
 -I FORWARD -i {{ internal[item]['interface'] }} -j ACCEPT
 {%   endif %}
 {% endfor %}
--I FORWARD -i {{ bridge_name }} -d  -j ACCEPT
+-I FORWARD -i {{ bridge_name }} -j ACCEPT
 {% if ext_bridge_name %}
 -I FORWARD -i {{ ext_bridge_name }} -j ACCEPT
 {%   if external_static_ip is defined and external_static_ip %}
