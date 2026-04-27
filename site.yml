@@ -1,12 +1,19 @@
 ---
-- hosts: utsida
+- name: Common for all
+  hosts: all
   roles:
-    - { role: tools, become: yes, tags: tools }
-    - { role: disabled_services, become: yes, tags: disabled_services }
-    - { role: multicast, become: yes, tags: multicast }
-    - { role: sshd_configuration, become: yes, tags: sshd_configuration }
-    - { role: bridge, become: yes, tags: bridge }
-    - { role: filters, become: yes, tags: filters }
-    - { role: tunnels, become: yes, tags: tunnels }
-    - { role: sysctl, become: yes, tags: sysctl }
-    - { role: dhcp, become: yes, tags: dhcp }
+    - { role: tools, become: true, tags: tools }
+    - { role: disabled_services, become: true, tags: disabled_services }
+    - { role: sshd_configuration, become: true, tags: sshd_configuration }
+
+- name: Configure external point
+  hosts: utsida
+  roles:
+    - { role: multicast, become: true, tags: multicast }
+    - { role: bridge, become: true, tags: bridge }
+    - { role: filters, become: true, tags: filters }
+    - { role: tunnels, become: true, tags: tunnels }
+    - { role: sysctl, become: true, tags: sysctl }
+    - { role: dhcp, become: true, tags: dhcp }
+    - { role: mqtt, become: true, tags: mqtt }
+    - { role: haproxy, become: true, tags: haproxy }
