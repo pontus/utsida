@@ -3,6 +3,8 @@
   ansible.builtin.template:
     src: tunnel.yml
     dest: /etc/netplan/utsida-tunnel-{{ item['name'] }}.yaml
+    mode: "0600"
+    owner: root
   notify:
     - Apply netplan configuration
   vars:

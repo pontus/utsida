@@ -1,5 +1,4 @@
 ---
-
 - name: Install dnsmasq
   ansible.builtin.apt:
     name:
@@ -10,17 +9,23 @@
 - name: Ensure existence of dnsmasq systemd override directory
   ansible.builtin.file:
     path: /etc/systemd/system/dnsmasq.service.d
+    mode: "0755"
+    owner: root
     state: directory
 
 - name: Install dnsmasq systemd override
   ansible.builtin.copy:
     dest: /etc/systemd/system/dnsmasq.service.d/override.conf
+    mode: "0644"
+    owner: root
     src: dnsmasq-override.conf
 
 - name: Create DHCP configuration
   ansible.builtin.template:
     src: dnsmasq.conf.j2
     dest: /etc/dnsmasq.conf
+    owner: root
+    mode: "0644"
   notify:
     - Reload dnsmasq
 
@@ -28,7 +33,8 @@
   ansible.builtin.template:
     src: external-dhcp-request.yaml.j2
     dest: /etc/netplan/70-utsida-external-dhcp-request.yaml
-    mode: "0700"
+    mode: "0600"
+    owner: root
   notify:
     - Apply netplan configuration
 
@@ -36,6 +42,7 @@
   ansible.builtin.template:
     src: external-dhcp-serve.yaml.j2
     dest: /etc/netplan/80-utsida-external-dhcp-serve.yaml
-    mode: "0700"
+    mode: "0600"
+    owner: root
   notify:
     - Apply netplan configuration

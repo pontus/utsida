@@ -1,5 +1,5 @@
 ---
-apt_pkg_list:
+tools_apt_pkg_list:
   - git
   - etckeeper
   - bash-completion
@@ -17,11 +17,13 @@ apt_pkg_list:
   - unattended-upgrades
   - snapd
   - unzip
+  - bridge-utils
+  - docker.io
 
-snap_pkg_list:
+tools_snap_pkg_list:
   - nmap
 
-apt_not_installed_list:
+tools_apt_not_installed_list:
   - samba
   - samba-libs
   - cups
