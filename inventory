@@ -1,2 +1,4 @@
 [utsida]
-drupel  ansible_host=192.168.25.2
+domherre  ansible_host=192.168.25.1
+[others]
+drupel ansible_host=192.168.25.2
