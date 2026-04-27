@@ -14,12 +14,13 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK FOR NAT"
   notify:
     - Reload ufw
-  when: nat==True or nat|lower in ('yes', 'true')
+  when: nat or nat|lower in ('yes', 'true')
 
 - name: Set up allowances for apps
   ansible.builtin.command:
     cmd: ufw allow "{{ item }}"
-  loop: "{{ allowed_apps }}"
+  loop: "{{ filters_allowed_apps }}"
+  changed_when: true
 
 - name: Enable filtering
   ansible.builtin.lineinfile:
