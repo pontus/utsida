@@ -1,9 +1,9 @@
 ---
-disabled_systemd_list:
+disabled_services_systemd_list:
   - open-iscsi
   - ModemManager
 
-blacklisted_modules:
+disabled_services_blacklisted_modules:
   - iscsi_tcp
   - libiscsi
   - scsi_transport_iscsi

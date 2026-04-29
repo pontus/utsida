@@ -1,5 +1,4 @@
 ---
-
 - name: Installed unifi
   ansible.builtin.systemd:
     state: started
@@ -8,4 +7,4 @@
 - name: Trust unifi key
   ansible.builtin.command:
     cmd: apt-key add /etc/unifi.key
-
+  changed_when: true

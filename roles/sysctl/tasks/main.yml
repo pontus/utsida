@@ -3,5 +3,7 @@
   ansible.builtin.copy:
     dest: /etc/sysctl.d/50-forward.conf
     src: forward.conf
+    owner: root
+    mode: "0644"
   notify:
     - Reload sysctl

@@ -1,18 +1,20 @@
 ---
-
-- apt: name={{ apt_not_installed_list }} state=absent
-  name: Uninstall unwanted software (apt)
+- name: Uninstall unwanted software (apt)
+  ansible.builtin.apt:
+    name: "{{ tools_apt_not_installed_list }}"
+    state: absent
 
 - name: Install software (apt)
-  apt:
-    name: "{{ apt_pkg_list }}"
+  ansible.builtin.apt:
+    name: "{{ tools_apt_pkg_list }}"
     state: present
     update_cache: true
   notify:
     - Initialize etckeeper
 
-- snap: name={{ snap_pkg_list }} state=present
-  name: Install software (snap)
+- name: Install software (snap)
+  community.general.snap:
+    name: "{{ tools_snap_pkg_list }}"
+    state: present
   notify:
     - Start snaps
-
